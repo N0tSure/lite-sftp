@@ -1,0 +1,39 @@
+= Embedded Sftp
+
+This application allow access to some directory via SFTP protocol.
+
+== Configuration
+
+.Configuration properties
+|===
+|Property |Environment variable |Default value |Description
+
+|`service.embedded.sftp.port`
+|`SERVICE_EMBEDDED_SFTP_PORT`
+|`22`
+|Port which SFTP will listen
+
+
+|`service.embedded.sftp.server-key`
+|`SERVICE_EMBEDDED_SFTP_SERVER-KEY`
+|N/A
+|Server's identity (private) key file
+
+|`service.embedded.sftp.username`
+|`SERVICE_EMBEDDED_SFTP_USERNAME`
+|N/A
+|Username which able to use this server
+
+
+|`service.embedded.sftp.user-key`
+|`SERVICE_EMBEDDED_SFTP_USER-KEY`
+|N/A
+|User's public key file
+
+|`service.embedded.sftp.catalog`
+|`SERVICE_EMBEDDED_SFTP_CATALOG`
+|N/A
+|Directory which SFTP server will serve
+
+|===
+
