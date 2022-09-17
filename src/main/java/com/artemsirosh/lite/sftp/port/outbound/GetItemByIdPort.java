@@ -13,6 +13,7 @@ public interface GetItemByIdPort {
      * Returns found item by item id.
      * 
      * @param id {@link Item} identifier
+     * @throws com.artemsirosh.lite.sftp.errors.AbstractServiceException when item not found
      */
     @NonNull
     Item getItemById(@NonNull final ItemId id);
