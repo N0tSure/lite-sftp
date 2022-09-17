@@ -38,7 +38,7 @@ public interface Item {
      */
     default List<String> calculatePath() {
         final var path = new LinkedList<String>();
-        for (Item i = this; i != null; i = i.getParent()) {
+        for (Item i = this.getParent(); i != null; i = i.getParent()) {
             path.addFirst(i.getName());
         }
 

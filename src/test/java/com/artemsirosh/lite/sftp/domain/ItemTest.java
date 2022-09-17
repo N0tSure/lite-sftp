@@ -47,13 +47,16 @@ class ItemTest {
 
 
         assertThat(charlie.calculatePath())
-                .containsExactly("alpha", "bravo", "charlie");
+                .describedAs("Should have 2 parents")
+                .containsExactly("alpha", "bravo");
 
         assertThat(bravo.calculatePath())
-                .containsOnly("alpha", "bravo");
+                .describedAs("Should have one parent")
+                .containsOnly("alpha");
 
         assertThat(alpha.calculatePath())
-                .containsOnly("alpha");
+                .describedAs("Should have no parents")
+                .isEmpty();
 
     }
 }
