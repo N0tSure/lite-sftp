@@ -9,9 +9,10 @@ import org.springframework.lang.NonNull;
 public interface RegisterItemPort {
 
     /**
-     * Registres item.
+     * Registers item.
      * 
      * @param item {@link Item} model
+     * @throws com.artemsirosh.lite.sftp.errors.AbstractServiceException if item already registered
      */
     void register(@NonNull final Item item);
 }
