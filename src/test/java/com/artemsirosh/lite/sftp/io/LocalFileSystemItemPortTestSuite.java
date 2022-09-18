@@ -1,7 +1,9 @@
 package com.artemsirosh.lite.sftp.io;
 
 import com.artemsirosh.lite.sftp.domain.Directory;
+import com.artemsirosh.lite.sftp.domain.File;
 import com.artemsirosh.lite.sftp.port.outbound.CreateDirectoryPort;
+import com.artemsirosh.lite.sftp.port.outbound.DeleteItemPort;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,8 +28,12 @@ abstract class LocalFileSystemItemPortTestSuite {
                 Files.createDirectory(directoryPath);
             }
         }
+        directoryPath = directoryPath.resolve(directory.getName());
+        if (!Files.exists(directoryPath)) {
+            Files.createDirectory(directoryPath);
+        }
 
-        return Files.createDirectory(directoryPath.resolve(directory.getName()));
+        return directoryPath;
     }
 
     Path createDirectory(final String name) throws IOException {
@@ -38,11 +44,23 @@ abstract class LocalFileSystemItemPortTestSuite {
         return Files.createDirectory(path.resolve(name));
     }
 
+    Path createFile(final File file) throws IOException {
+        final Path parent = createDirectory((Directory) file.getParent());
+        return Files.createFile(parent.resolve(file.getName()));
+    }
+
     CreateDirectoryPort getCreateDirectoryPort() {
         return service;
     }
 
     Path getDirectoryPath(final Directory directory) {
-        return directory.calculatePath().stream().reduce(temporaryDirectory, Path::resolve, (p1, p2) -> p2);
+        final Path parentDirectoryPath = directory.calculatePath().stream()
+                .reduce(temporaryDirectory, Path::resolve, (p1, p2) -> p2);
+
+        return parentDirectoryPath.resolve(directory.getName());
+    }
+
+    DeleteItemPort getDeleteItemPort() {
+        return service;
     }
 }
