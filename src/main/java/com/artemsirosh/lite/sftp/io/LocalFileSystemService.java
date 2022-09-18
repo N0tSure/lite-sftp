@@ -5,6 +5,7 @@ import com.artemsirosh.lite.sftp.domain.Item;
 import com.artemsirosh.lite.sftp.errors.AbstractServiceException;
 import com.artemsirosh.lite.sftp.port.outbound.CreateDirectoryPort;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
 
@@ -14,6 +15,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+@Slf4j
 @RequiredArgsConstructor
 class LocalFileSystemService implements CreateDirectoryPort {
 
@@ -33,10 +35,14 @@ class LocalFileSystemService implements CreateDirectoryPort {
                throw new ItemPathNotExistsException(parentPath);
             }
         }
+        log.info("Resolved parent path '{}'", parentPath);
 
         final Path directoryPath = parentPath.resolve(directory.getName());
+        log.info("Resolved directory path '{}'", directoryPath);
+
         try {
             Files.createDirectory(directoryPath);
+            log.info("Created directory: {}, path: {}", directory, directoryPath);
         } catch (FileAlreadyExistsException exc) {
            throw new ItemPathAlreadyExistsException(directory, exc);
         } catch (IOException exc) {
