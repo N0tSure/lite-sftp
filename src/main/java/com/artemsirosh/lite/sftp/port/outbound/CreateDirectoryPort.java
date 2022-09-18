@@ -12,6 +12,9 @@ public interface CreateDirectoryPort {
      * Creates new directory using passed model.
      * 
      * @param directory {@link Directory} model
+     * @throws com.artemsirosh.lite.sftp.errors.AbstractServiceException when:<br/>
+     *         1) Directory parent not exists<br/>
+     *         2) Same directory already exists
      */
     void createDirectory(@NonNull final Directory directory);
 }
