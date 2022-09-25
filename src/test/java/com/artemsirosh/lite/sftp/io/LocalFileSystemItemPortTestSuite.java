@@ -3,6 +3,7 @@ package com.artemsirosh.lite.sftp.io;
 import com.artemsirosh.lite.sftp.domain.Directory;
 import com.artemsirosh.lite.sftp.domain.File;
 import com.artemsirosh.lite.sftp.port.outbound.CreateDirectoryPort;
+import com.artemsirosh.lite.sftp.port.outbound.CreateFilePort;
 import com.artemsirosh.lite.sftp.port.outbound.DeleteItemPort;
 
 import java.io.IOException;
@@ -36,14 +37,6 @@ abstract class LocalFileSystemItemPortTestSuite {
         return directoryPath;
     }
 
-    Path createDirectory(final String name) throws IOException {
-        return Files.createDirectory(temporaryDirectory.resolve(name));
-    }
-
-    Path createDirectory(final String name, final Path path) throws IOException {
-        return Files.createDirectory(path.resolve(name));
-    }
-
     Path createFile(final File file) throws IOException {
         final Path parent = createDirectory((Directory) file.getParent());
         return Files.createFile(parent.resolve(file.getName()));
@@ -61,6 +54,10 @@ abstract class LocalFileSystemItemPortTestSuite {
     }
 
     DeleteItemPort getDeleteItemPort() {
+        return service;
+    }
+
+    CreateFilePort getCreateFilePort() {
         return service;
     }
 }

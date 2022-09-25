@@ -1,15 +1,19 @@
 package com.artemsirosh.lite.sftp.io;
 
 import com.artemsirosh.lite.sftp.domain.Directory;
+import com.artemsirosh.lite.sftp.domain.File;
+import com.artemsirosh.lite.sftp.domain.FileContent;
 import com.artemsirosh.lite.sftp.domain.Item;
 import com.artemsirosh.lite.sftp.errors.AbstractServiceException;
 import com.artemsirosh.lite.sftp.port.outbound.CreateDirectoryPort;
+import com.artemsirosh.lite.sftp.port.outbound.CreateFilePort;
 import com.artemsirosh.lite.sftp.port.outbound.DeleteItemPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.FileAlreadyExistsException;
@@ -21,7 +25,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 
 @Slf4j
 @RequiredArgsConstructor
-class LocalFileSystemService implements CreateDirectoryPort, DeleteItemPort {
+class LocalFileSystemService implements CreateDirectoryPort, DeleteItemPort, CreateFilePort {
 
     private final Path rootDirectory;
 
@@ -42,6 +46,20 @@ class LocalFileSystemService implements CreateDirectoryPort, DeleteItemPort {
         } catch (IOException exc) {
             throw new UncheckedIOException("Unable to create directory: '" + directoryPath + "'", exc);
         }
+    }
+
+    @Override
+    public void createFile(@NonNull final File file, @NonNull final FileContent content) {
+        final Path parentPath = getItemPath(file.getParent());
+        final Path filePath = parentPath.resolve(file.getName());
+        log.debug("Creating a file with local path: {}", filePath);
+        try {
+            final long bytesWritten = Files.copy(new ByteArrayInputStream(content.getContent()), filePath);
+            log.debug("File created, {} bytes written", bytesWritten);
+        } catch (IOException exc) {
+            throw new UncheckedIOException("Unable to create file: '" + filePath + "'", exc);
+        }
+
     }
 
     @Override
