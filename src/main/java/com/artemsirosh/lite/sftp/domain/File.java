@@ -16,7 +16,8 @@ import java.time.Instant;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class File implements Item {
 
-    ItemId id;
+    @Builder.Default
+    ItemId id = ItemId.newInstanceUUID();
     Item parent;
     String name;
 

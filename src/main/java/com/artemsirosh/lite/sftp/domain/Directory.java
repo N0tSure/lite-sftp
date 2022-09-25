@@ -90,7 +90,7 @@ public class Directory implements Item {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Builder {
 
-        ItemId id;
+        ItemId id = ItemId.newInstanceUUID();
         Item parent;
         String name;
         Set<ChildItem> children = new HashSet<>();
