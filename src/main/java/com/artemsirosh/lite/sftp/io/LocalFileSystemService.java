@@ -8,6 +8,7 @@ import com.artemsirosh.lite.sftp.errors.AbstractServiceException;
 import com.artemsirosh.lite.sftp.port.outbound.CreateDirectoryPort;
 import com.artemsirosh.lite.sftp.port.outbound.CreateFilePort;
 import com.artemsirosh.lite.sftp.port.outbound.DeleteItemPort;
+import com.artemsirosh.lite.sftp.port.outbound.GetFileContentPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
@@ -25,7 +26,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 
 @Slf4j
 @RequiredArgsConstructor
-class LocalFileSystemService implements CreateDirectoryPort, DeleteItemPort, CreateFilePort {
+class LocalFileSystemService implements CreateDirectoryPort, DeleteItemPort, CreateFilePort, GetFileContentPort {
 
     private final Path rootDirectory;
 
@@ -82,6 +83,18 @@ class LocalFileSystemService implements CreateDirectoryPort, DeleteItemPort, Cre
 
         } catch (IOException exc) {
             throw new UncheckedIOException("Unable to delete item: '" + itemPath + "'", exc);
+        }
+    }
+
+    @NonNull
+    @Override
+    public FileContent getFileContent(@NonNull final File file) {
+        final var filePath = getItemPath(file);
+        log.debug("Retrieving local file: {}", filePath);
+        try {
+            return new FileContent(Files.readAllBytes(filePath));
+        } catch (IOException e) {
+            throw new UncheckedIOException("Unable to read file: '" + "'", e);
         }
     }
 
